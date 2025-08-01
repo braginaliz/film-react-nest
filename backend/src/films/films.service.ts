@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { FilmsResponseDto, ScheduleResponseDto } from './dto/films.dto';
+import { FilmsResponseDto, 
+        ScheduleResponseDto } from './dto/films.dto';
 import { InterfaceFilmsRepository } from '../repository/films.repository';
 
 @Injectable()
