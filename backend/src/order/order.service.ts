@@ -5,7 +5,7 @@ import {
   TicketItemDto,
   ErrorDto,
 } from './dto/order.dto';
-import { InterfaceFilmsRepository } from '../repository/films.repository';
+import { InterfaceFilmsRepository } from '../repository/ifilm';
 
 @Injectable()
 export class OrderService {
