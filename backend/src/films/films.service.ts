@@ -6,7 +6,6 @@ import { FilmsRepository } from '../repository/films.repository';
 @Injectable()
 export class FilmsService {
   constructor(
-    @Inject('FilmsRepository')
     private readonly filmsRepository: FilmsRepository,
   ) {}
 

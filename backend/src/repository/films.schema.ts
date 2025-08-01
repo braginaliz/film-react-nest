@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Schema()
 export class Schedule {
@@ -24,7 +25,7 @@ export class Schedule {
 }
 
 @Schema()
-export class Film {
+export class Film extends Document {
   @Prop({ required: true })
   id: string;
 

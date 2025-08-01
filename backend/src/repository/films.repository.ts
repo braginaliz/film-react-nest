@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { Film } from './films.schema';
 import { CreateFilmDto, SessionDto } from '../films/dto/films.dto'
 
-
 @Injectable()
 export class FilmsRepository {
   constructor(

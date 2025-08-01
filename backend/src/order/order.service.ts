@@ -5,11 +5,11 @@ import {
   TicketItemDto,
   ErrorDto,
 } from './dto/order.dto';
-import { InterfaceFilmsRepository } from '../repository/ifilm';
+import { FilmsRepository } from '../repository/films.repository';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: InterfaceFilmsRepository) {}
+  constructor(private readonly filmsRepository: FilmsRepository) {}
 
   async createOrder(
     orders: TicketOrderDto[],

@@ -3,10 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as path from 'node:path';
 import { Module } from '@nestjs/common';
-import { FilmsModule } from './repository/filma.module'; 
 import { OrderService } from './order/order.service';
+import { FilmsController } from './films/films.controller';
+import { FilmsRepository } from './repository/films.repository';
 import { configProvider } from './app.config.provider';
 import { OrderController } from './order/order.controller';
+import { FilmsService } from './films/films.service';
+import { Film, FilmSchema } from './repository/films.schema';
 
 @Module({
     imports: [
@@ -21,14 +24,15 @@ import { OrderController } from './order/order.controller';
                 ),
             }),
             inject: [ConfigService],
-        }),
+        }),MongooseModule.forFeature([{ name: Film.name, schema: FilmSchema }]),
+
         ServeStaticModule.forRoot({
             rootPath: path.join(__dirname, '..', 'public', 'content/afisha'),
             serveRoot: '/content/afisha/',
         }),
-        FilmsModule, 
+      
     ],
-    controllers: [OrderController],
-    providers: [OrderService, configProvider],
+    controllers: [OrderController, FilmsController],
+    providers: [ FilmsRepository, FilmsService, OrderService, configProvider],
 })
 export class AppModule {}
