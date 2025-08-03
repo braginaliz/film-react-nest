@@ -9,6 +9,9 @@ import {
   
   @Entity('schedules')
   export class Schedule {
+    map(arg0: (schedule: any) => any): import("../films/dto/films.dto").SessionDto[] {
+      throw new Error('Method not implemented.');
+    }
     @PrimaryGeneratedColumn('uuid')
     id: string;  // идентификатор
   
@@ -36,4 +39,5 @@ import {
   
     @Column({ type: 'text', array: true, default: [] })
     taken: string[];  // забронированные места
+    length: number;
   }

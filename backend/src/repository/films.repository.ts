@@ -1,17 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Film } from './films.schema';
-import { CreateFilmDto, SessionDto } from '../films/dto/films.dto'
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Film } from '../entity/efilm';
+import { Schedule } from '../entity/eschedule';
+import { CreateFilmDto, SessionDto } from '../films/dto/films.dto';
+
+interface IFilmsRepository {
+  getAllFilms(): Promise<{ total: number; items: CreateFilmDto[] }>;
+  getSessionsByFilmId(
+    filmId: string,
+  ): Promise<{ total: number; items: SessionDto[] }>;
+  getSessionById(sessionId: string): Promise<SessionDto | null>;
+  markSessionAsTaken(sessionId: string, taken: string[]): Promise<boolean>;
+}
 
 @Injectable()
-export class FilmsRepository {
+export class TypeOrmFilmsRepository implements IFilmsRepository {
   constructor(
-    @InjectModel(Film.name) private readonly filmModel: Model<Film>,
+    @InjectRepository(Film)
+    private filmRepository: Repository<Film>,
+    @InjectRepository(Schedule)
+    private scheduleRepository: Repository<Schedule>,
   ) {}
 
+
   async getAllFilms(): Promise<{ total: number; items: CreateFilmDto[] }> {
-    const films = await this.filmModel.find().exec();
+    const films = await this.filmRepository.find();
     const filmsDto = films.map(this.mapFilmToDto);
 
     return {
@@ -23,45 +37,41 @@ export class FilmsRepository {
   async getSessionsByFilmId(
     filmId: string,
   ): Promise<{ total: number; items: SessionDto[] }> {
-    const film = await this.filmModel.findOne({ id: filmId }).exec();
-
-    if (!film) {
-      return { total: 0, items: [] };
+    const schedules = await this.scheduleRepository.findOne({where: { id: filmId },
+    });
+    if (!schedules) {
+      return null;
     }
-
-    const sessionsDto = film.schedule.map(this.mapSessionToDto);
     return {
-      total: sessionsDto.length,
-      items: sessionsDto,
+      total: schedules.length,
+      items: schedules.map((schedule) => this.mapSessionToDto(schedule)),
     };
   }
 
   async getSessionById(sessionId: string): Promise<SessionDto | null> {
-    const film = await this.filmModel
-      .findOne({ 'schedule.id': sessionId })
-      .exec();
-
-    if (!film) {
+    const session = await this.scheduleRepository
+      .findOne({
+        where: { id: sessionId },
+      });
+  
+    if (!session) {
       return null;
     }
-
-    const session = film.schedule.find((s) => s.id === sessionId);
     return session ? this.mapSessionToDto(session) : null;
   }
 
   async markSessionAsTaken(
     sessionId: string,
-    takenSeats: string[],
+    taken: string[],
   ): Promise<boolean> {
-    const result = await this.filmModel
-      .updateOne(
-        { 'schedule.id': sessionId },
-        { $set: { 'schedule.$.taken': takenSeats } },
-      )
-      .exec();
+    const result = await this.scheduleRepository
+      .update(
+        { id: sessionId },
+        { taken },
+      );
+      return result.affected ? result.affected > 0 : false;
+    }
 
-    return result.modifiedCount > 0;
-  }
 
   private mapFilmToDto(film: Film): CreateFilmDto {
     const {
