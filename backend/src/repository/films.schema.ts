@@ -59,4 +59,3 @@ export class Film extends Document {
 
 export const FilmSchema = SchemaFactory.createForClass(Film);
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);
-

@@ -18,4 +18,3 @@ export class FilmsController {
     return this.filmsService.fetchFilmSchedule(id);
   }
 }
-

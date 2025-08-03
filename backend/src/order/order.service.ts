@@ -5,11 +5,11 @@ import {
   TicketItemDto,
   ErrorDto,
 } from './dto/order.dto';
-import { FilmsRepository } from '../repository/films.repository';
+import { IFilmsRepository } from '../repository/films.repository';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: FilmsRepository) {}
+  constructor(private readonly filmsRepository: IFilmsRepository) {}
 
   async createOrder(
     orders: TicketOrderDto[],
@@ -166,4 +166,3 @@ export class OrderService {
     return `order-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
   }
 }
-

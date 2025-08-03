@@ -4,7 +4,6 @@ import { Film } from '../entity/efilm';
 import { Schedule } from '../entity/eschedule';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({

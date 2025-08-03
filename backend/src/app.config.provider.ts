@@ -11,15 +11,12 @@ export const configProvider = {
       username: configService.get<string>('DATABASE_USERNAME', 'username'),
       password: configService.get<string>('DATABASE_PASSWORD', 'password'),
       database: configService.get<string>('DATABASE_NAME', 'database_name'),
-      synchronize:  false,
+      synchronize: false,
       logging: false,
     },
   }),
   inject: [ConfigService],
 };
-
-    
-
 
 export interface AppConfig {
   database: AppConfigDatabase;
