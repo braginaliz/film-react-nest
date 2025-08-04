@@ -6,9 +6,9 @@ import { Column, OneToMany } from 'typeorm';
 export class Film {
   @PrimaryGeneratedColumn('uuid') // идентификатор
   id: string;
-  @Column({ type: 'varchar', length: 300 }) // Название
+  @Column({ type: 'varchar', length: 255 }) // Название
   title: string;
-  @Column({ type: 'varchar', length: 300 }) // Режиссёр
+  @Column({ type: 'varchar', length: 255 }) // Режиссёр
   director: string;
 
   @Column({ type: 'text' }) // Подробное описание

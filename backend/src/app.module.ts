@@ -29,17 +29,10 @@ export class AppModule {
       }),
     ];
 
-    let repositoryProvider;
-    let imports;
-
-    if (dbDriver === 'postgres') {
-      
-      imports = [...baseImports, forwardRef(() => DatabaseModule)];
-      repositoryProvider = {
-        provide: 'IFilmsRepository',
-        useClass: TypeOrmFilmsRepository,
-      };
-    }
+    const imports = [
+      ...baseImports,
+      DatabaseModule,
+    ];
 
     return {
       module: AppModule,
@@ -49,7 +42,10 @@ export class AppModule {
         configProvider,
         FilmsService,
         OrderService,
-        repositoryProvider,
+        {
+          provide: 'IFilmsRepository',
+          useClass: TypeOrmFilmsRepository,
+        },
       ],
     };
   }

@@ -4,16 +4,14 @@ import { Repository } from 'typeorm';
 import { Film } from '../entity/efilm';
 import { Schedule } from '../entity/eschedule';
 import { CreateFilmDto, SessionDto } from '../films/dto/films.dto';
-import { IFilmsRepository } from './films.repository.interface';
-
 
 @Injectable()
-export class TypeOrmFilmsRepository implements IFilmsRepository {
+export class TypeOrmFilmsRepository {
   constructor(
     @InjectRepository(Film)
-    private filmRepository: Repository<Film>,
+    private readonly filmRepository: Repository<Film>,
     @InjectRepository(Schedule)
-    private scheduleRepository: Repository<Schedule>,
+    private readonly scheduleRepository: Repository<Schedule>,
   ) {}
 
   async getAllFilms(): Promise<{ total: number; items: CreateFilmDto[] }> {
@@ -26,15 +24,11 @@ export class TypeOrmFilmsRepository implements IFilmsRepository {
     };
   }
 
-  async getSessionsByFilmId(
-    filmId: string,
-  ): Promise<{ total: number; items: SessionDto[] }> {
-    const schedules = await this.scheduleRepository.findOne({
-      where: { id: filmId },
+  async getSessionsByFilmId(filmId: string): Promise<{ total: number; items: SessionDto[] }> {
+    const schedules = await this.scheduleRepository.find({
+      where: { filmId },
     });
-    if (!schedules) {
-      return null;
-    }
+    
     return {
       total: schedules.length,
       items: schedules.map((schedule) => this.mapSessionToDto(schedule)),
@@ -46,16 +40,10 @@ export class TypeOrmFilmsRepository implements IFilmsRepository {
       where: { id: sessionId },
     });
 
-    if (!session) {
-      return null;
-    }
     return session ? this.mapSessionToDto(session) : null;
   }
 
-  async markSessionAsTaken(
-    sessionId: string,
-    taken: string[],
-  ): Promise<boolean> {
+  async markSessionAsTaken(sessionId: string, taken: string[]): Promise<boolean> {
     const result = await this.scheduleRepository.update(
       { id: sessionId },
       { taken },
@@ -89,15 +77,7 @@ export class TypeOrmFilmsRepository implements IFilmsRepository {
     };
   }
 
-  private mapSessionToDto(session: {
-    id: string;
-    daytime: string;
-    hall: number;
-    rows: number;
-    seats: number;
-    price: number;
-    taken: string[];
-  }): SessionDto {
+  private mapSessionToDto(session: Schedule): SessionDto {
     return {
       id: session.id,
       daytime: session.daytime,

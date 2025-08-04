@@ -5,17 +5,15 @@ import {
   TicketItemDto,
   ErrorDto,
 } from './dto/order.dto';
-import { IFilmsRepository } from '../repository/films.repository.interface';
+import { TypeOrmFilmsRepository } from '../repository/films.repository';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @Inject('IFilmsRepository')
-    private readonly filmsRepository: IFilmsRepository) {}
+    @Inject('IFilmsRepository') private readonly filmsRepository: TypeOrmFilmsRepository,
+  ) {}
 
-  async createOrder(
-    orders: TicketOrderDto[],
-  ): Promise<TicketOrderResponseDto | ErrorDto> {
+  async createOrder(orders: TicketOrderDto[]): Promise<TicketOrderResponseDto | ErrorDto> {
     if (!this.isValidOrderList(orders)) {
       return this.createErrorResponse('Список пуст');
     }
@@ -52,9 +50,7 @@ export class OrderService {
     };
   }
 
-  private createSuccessResponse(
-    items: TicketItemDto[],
-  ): TicketOrderResponseDto {
+  private createSuccessResponse(items: TicketItemDto[]): TicketOrderResponseDto {
     return {
       total: items.length,
       items: items,
@@ -84,14 +80,7 @@ export class OrderService {
     };
   }
 
-  private async handleOrderItem(
-    orderDto: TicketOrderDto,
-    processedSeats: Set<string>,
-  ): Promise<TicketItemDto | { error: string }> {
-    if (!this.isOrderDataValid(orderDto)) {
-      return { error: 'Не хватает данных для оформления заказа' };
-    }
-
+  private async handleOrderItem(orderDto: TicketOrderDto, processedSeats: Set<string>): Promise<TicketItemDto | { error: string }> {
     const row = Number(orderDto.row);
     const seat = Number(orderDto.seat);
 
@@ -104,7 +93,7 @@ export class OrderService {
     const requestSeatKey = `${orderDto.session}:${row}:${seat}`;
     if (processedSeats.has(requestSeatKey)) {
       return {
-        error: `Место ${row}:${seat} уже существуют в этом запросе`,
+        error: `Место ${row}:${seat} уже существует в этом запросе`,
       };
     }
 
@@ -124,10 +113,7 @@ export class OrderService {
     }
 
     const updatedTaken = [...session.taken, `${row}:${seat}`];
-    const success = await this.filmsRepository.markSessionAsTaken(
-      orderDto.session,
-      updatedTaken,
-    );
+    const success = await this.filmsRepository.markSessionAsTaken(orderDto.session, updatedTaken);
     if (!success) {
       return { error: 'Ошибка при бронировании' };
     }
@@ -135,24 +121,11 @@ export class OrderService {
     return this.createOrderItem(orderDto, session, row, seat);
   }
 
-  private isOrderDataValid(orderDto: TicketOrderDto): boolean {
-    return Boolean(
-      orderDto.film && orderDto.session && orderDto.row && orderDto.seat,
-    );
-  }
-
   private isRowAndSeatValid(row: number, seat: number): boolean {
-    return (
-      Number.isInteger(row) && Number.isInteger(seat) && row > 0 && seat > 0
-    );
+    return Number.isInteger(row) && Number.isInteger(seat) && row > 0 && seat > 0;
   }
 
-  private createOrderItem(
-    orderDto: TicketOrderDto,
-    session: any,
-    row: number,
-    seat: number,
-  ): TicketItemDto {
+  private createOrderItem(orderDto: TicketOrderDto, session: any, row: number, seat: number): TicketItemDto {
     return {
       film: orderDto.film,
       session: orderDto.session,
