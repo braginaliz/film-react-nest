@@ -1,4 +1,4 @@
-import { Module, DynamicModule, forwardRef } from '@nestjs/common';
+import { Module, DynamicModule } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
@@ -17,8 +17,6 @@ dotenv.config();
 @Module({})
 export class AppModule {
   static forRoot(): DynamicModule {
-    const dbDriver = process.env.DATABASE_DRIVER || 'postgres';
-
     const baseImports = [
       ConfigModule.forRoot({
         isGlobal: true,
@@ -29,10 +27,7 @@ export class AppModule {
       }),
     ];
 
-    const imports = [
-      ...baseImports,
-      DatabaseModule,
-    ];
+    const imports = [...baseImports, DatabaseModule];
 
     return {
       module: AppModule,

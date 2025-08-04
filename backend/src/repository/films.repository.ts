@@ -24,11 +24,13 @@ export class TypeOrmFilmsRepository {
     };
   }
 
-  async getSessionsByFilmId(filmId: string): Promise<{ total: number; items: SessionDto[] }> {
+  async getSessionsByFilmId(
+    filmId: string,
+  ): Promise<{ total: number; items: SessionDto[] }> {
     const schedules = await this.scheduleRepository.find({
       where: { filmId },
     });
-    
+
     return {
       total: schedules.length,
       items: schedules.map((schedule) => this.mapSessionToDto(schedule)),
@@ -43,7 +45,10 @@ export class TypeOrmFilmsRepository {
     return session ? this.mapSessionToDto(session) : null;
   }
 
-  async markSessionAsTaken(sessionId: string, taken: string[]): Promise<boolean> {
+  async markSessionAsTaken(
+    sessionId: string,
+    taken: string[],
+  ): Promise<boolean> {
     const result = await this.scheduleRepository.update(
       { id: sessionId },
       { taken },

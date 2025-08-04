@@ -5,7 +5,8 @@ import { TypeOrmFilmsRepository } from '../repository/films.repository';
 @Injectable()
 export class FilmsService {
   constructor(
-    @Inject('IFilmsRepository') private readonly filmsRepository: TypeOrmFilmsRepository,
+    @Inject('IFilmsRepository')
+    private readonly filmsRepository: TypeOrmFilmsRepository,
   ) {}
 
   async fetchFilms(): Promise<FilmsResponseDto> {

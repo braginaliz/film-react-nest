@@ -10,10 +10,13 @@ import { TypeOrmFilmsRepository } from '../repository/films.repository';
 @Injectable()
 export class OrderService {
   constructor(
-    @Inject('IFilmsRepository') private readonly filmsRepository: TypeOrmFilmsRepository,
+    @Inject('IFilmsRepository')
+    private readonly filmsRepository: TypeOrmFilmsRepository,
   ) {}
 
-  async createOrder(orders: TicketOrderDto[]): Promise<TicketOrderResponseDto | ErrorDto> {
+  async createOrder(
+    orders: TicketOrderDto[],
+  ): Promise<TicketOrderResponseDto | ErrorDto> {
     if (!this.isValidOrderList(orders)) {
       return this.createErrorResponse('Список пуст');
     }
@@ -50,7 +53,9 @@ export class OrderService {
     };
   }
 
-  private createSuccessResponse(items: TicketItemDto[]): TicketOrderResponseDto {
+  private createSuccessResponse(
+    items: TicketItemDto[],
+  ): TicketOrderResponseDto {
     return {
       total: items.length,
       items: items,
@@ -80,7 +85,10 @@ export class OrderService {
     };
   }
 
-  private async handleOrderItem(orderDto: TicketOrderDto, processedSeats: Set<string>): Promise<TicketItemDto | { error: string }> {
+  private async handleOrderItem(
+    orderDto: TicketOrderDto,
+    processedSeats: Set<string>,
+  ): Promise<TicketItemDto | { error: string }> {
     const row = Number(orderDto.row);
     const seat = Number(orderDto.seat);
 
@@ -113,7 +121,10 @@ export class OrderService {
     }
 
     const updatedTaken = [...session.taken, `${row}:${seat}`];
-    const success = await this.filmsRepository.markSessionAsTaken(orderDto.session, updatedTaken);
+    const success = await this.filmsRepository.markSessionAsTaken(
+      orderDto.session,
+      updatedTaken,
+    );
     if (!success) {
       return { error: 'Ошибка при бронировании' };
     }
@@ -122,10 +133,17 @@ export class OrderService {
   }
 
   private isRowAndSeatValid(row: number, seat: number): boolean {
-    return Number.isInteger(row) && Number.isInteger(seat) && row > 0 && seat > 0;
+    return (
+      Number.isInteger(row) && Number.isInteger(seat) && row > 0 && seat > 0
+    );
   }
 
-  private createOrderItem(orderDto: TicketOrderDto, session: any, row: number, seat: number): TicketItemDto {
+  private createOrderItem(
+    orderDto: TicketOrderDto,
+    session: any,
+    row: number,
+    seat: number,
+  ): TicketItemDto {
     return {
       film: orderDto.film,
       session: orderDto.session,
