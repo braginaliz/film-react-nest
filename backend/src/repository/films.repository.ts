@@ -4,15 +4,8 @@ import { Repository } from 'typeorm';
 import { Film } from '../entity/efilm';
 import { Schedule } from '../entity/eschedule';
 import { CreateFilmDto, SessionDto } from '../films/dto/films.dto';
+import { IFilmsRepository } from './films.repository.interface';
 
-export interface IFilmsRepository {
-  getAllFilms(): Promise<{ total: number; items: CreateFilmDto[] }>;
-  getSessionsByFilmId(
-    filmId: string,
-  ): Promise<{ total: number; items: SessionDto[] }>;
-  getSessionById(sessionId: string): Promise<SessionDto | null>;
-  markSessionAsTaken(sessionId: string, taken: string[]): Promise<boolean>;
-}
 
 @Injectable()
 export class TypeOrmFilmsRepository implements IFilmsRepository {

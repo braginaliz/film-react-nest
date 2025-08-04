@@ -21,6 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         logging: false,
       }),
     }),
+   
     TypeOrmModule.forFeature([Film, Schedule]),
   ],
   exports: [TypeOrmModule],

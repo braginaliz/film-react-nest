@@ -1,4 +1,4 @@
-import { Module, DynamicModule } from '@nestjs/common';
+import { Module, DynamicModule, forwardRef } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
@@ -22,7 +22,6 @@ export class AppModule {
     const baseImports = [
       ConfigModule.forRoot({
         isGlobal: true,
-        cache: true,
       }),
       ServeStaticModule.forRoot({
         rootPath: path.join(__dirname, '..', 'public', 'content'),
@@ -34,7 +33,8 @@ export class AppModule {
     let imports;
 
     if (dbDriver === 'postgres') {
-      imports = [...baseImports, DatabaseModule];
+      
+      imports = [...baseImports, forwardRef(() => DatabaseModule)];
       repositoryProvider = {
         provide: 'IFilmsRepository',
         useClass: TypeOrmFilmsRepository,
