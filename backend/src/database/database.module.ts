@@ -1,21 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Film } from '../entity/efilm';
-import { Schedule } from '../entity/eschedule';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import {Film} from '../entity/efilm';
+import { Schedule } from 'src/entity/eschedule';
 import { TypeOrmFilmsRepository } from 'src/repository/films.repository';
-import { FilmsController } from 'src/films/films.controller';
-import { OrderController } from 'src/order/order.controller';
-import { FilmsService } from 'src/films/films.service';
-import { OrderService } from 'src/order/order.service';
-import * as path from 'node:path';
-import { ServeStaticModule } from '@nestjs/serve-static';
+
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -35,20 +27,13 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       }),
     }),
     TypeOrmModule.forFeature([Film, Schedule]),
-    ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'public', 'content'),
-      serveRoot: '/content',
-    }),
   ],
-  controllers: [FilmsController, OrderController],
   providers: [
-    FilmsService,
-    OrderService,
     {
       provide: 'IFilmsRepository',
       useClass: TypeOrmFilmsRepository,
     },
   ],
-  exports: [TypeOrmFilmsRepository, TypeOrmModule],
+  exports: ['IFilmsRepository', TypeOrmModule],
 })
 export class DatabaseModule {}
