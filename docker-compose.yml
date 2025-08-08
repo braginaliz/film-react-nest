@@ -7,7 +7,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: films
+      DB_NAME: ${DB_NAME}
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -15,8 +15,6 @@ services:
       - '5432:5432'
     networks:
       - internal
-    env_file:
-      - .env
 
   pgadmin:
     image: dpage/pgadmin4
@@ -31,8 +29,9 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     networks:
       - internal    
+
   frontend:
-    image: 'ghcr.io/${OWNER}/sp16_frontend:latest'
+    image: 'ghcr.io/${OWNER}/frontend:latest'
     build:
       context: frontend
     environment:
@@ -43,7 +42,7 @@ services:
       - frontend_build:/app/dist   
 
   backend:
-    image: 'ghcr.io/${OWNER}/sp16_backend:latest'
+    image: 'ghcr.io/${OWNER}/backend:latest'
     build:
         context: backend
     environment:
@@ -61,7 +60,7 @@ services:
         - database
 
   server:
-    image: 'ghcr.io/${OWNER}/sp16_server:latest'
+    image: 'ghcr.io/${OWNER}/server:latest'
     build:
       context: nginx
     ports:
