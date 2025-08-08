@@ -4,7 +4,6 @@ import { TypeOrmFilmsRepository } from '../repository/films.repository';
 import {
   TicketOrderDto,
   TicketOrderResponseDto,
-  TicketItemDto,
   ErrorDto,
 } from './dto/order.dto';
 
@@ -41,8 +40,12 @@ describe('OrderService', () => {
       const orders: TicketOrderDto[] = [
         { film: 'Film1', session: 'session1', row: -1, seat: -1 },
       ];
-      const result: ErrorDto = { total: 0, items: [], error: 'Номер ряда и место должны быть положительными целыми числами' };
-      
+      const result: ErrorDto = {
+        total: 0,
+        items: [],
+        error: 'Номер ряда и место должны быть положительными целыми числами',
+      };
+
       const response = await orderService.createOrder(orders);
       expect(response).toEqual(result);
     });
@@ -54,14 +57,18 @@ describe('OrderService', () => {
       jest.spyOn(filmsRepository, 'getSessionById').mockResolvedValue({
         rows: 2,
         seats: 2,
-        taken: [ ],
+        taken: [],
         daytime: '2024-07-18T12:00:00Z',
         price: 100,
-        id: 'sessionId', 
+        id: 'sessionId',
         hall: 1,
       });
-      
-      const result: ErrorDto = { total: 0, items: [], error: 'Место 1:1 занято' };
+
+      const result: ErrorDto = {
+        total: 0,
+        items: [],
+        error: 'Место 1:1 занято',
+      };
       const response = await orderService.createOrder(orders);
       expect(response).toEqual(result);
     });
@@ -77,13 +84,16 @@ describe('OrderService', () => {
         daytime: '2024-07-18T12:00:00Z',
         price: 100,
         id: 'sessionId',
-        hall: 1, 
+        hall: 1,
       };
 
-      jest.spyOn(filmsRepository, 'getSessionById').mockResolvedValue(sessionMock);
+      jest
+        .spyOn(filmsRepository, 'getSessionById')
+        .mockResolvedValue(sessionMock);
       jest.spyOn(filmsRepository, 'markSessionAsTaken').mockResolvedValue(true);
 
-      const response: TicketOrderResponseDto = await orderService.createOrder(orders);
+      const response: TicketOrderResponseDto =
+        await orderService.createOrder(orders);
       expect(response.total).toBe(1);
       expect(response.items).toHaveLength(1);
       expect(response.items[0]).toHaveProperty('film', 'Film1');

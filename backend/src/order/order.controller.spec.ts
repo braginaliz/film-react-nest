@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
-import { TicketOrderDto, TicketOrderResponseDto, ErrorDto } from './dto/order.dto';
+import {
+  TicketOrderDto,
+  TicketOrderResponseDto
+} from './dto/order.dto';
 
 describe('OrderController', () => {
   let orderController: OrderController;
@@ -48,7 +51,7 @@ describe('OrderController', () => {
         { film: 'Film1', session: 'session1', row: 1, seat: 1 },
       ];
       const response: TicketOrderResponseDto = { total: 1, items: [] };
-      
+
       jest.spyOn(orderService, 'createOrder').mockResolvedValue(response);
 
       const result = await orderController.createOrder(orders);

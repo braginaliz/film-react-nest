@@ -25,12 +25,11 @@ describe('JsonLogger Tests', () => {
 
       expect(logSpy).toHaveBeenCalledWith(
         expect.stringMatching(
-            /^{"level":"log","message":"test message","optionalParams":\[\["param1","param2"\]\],"timestamp":".*"}$/,
-          ),
-        );
-      });
+          /^{"level":"log","message":"test message","optionalParams":\[\["param1","param2"\]\],"timestamp":".*"}$/,
+        ),
+      );
     });
-  
+  });
 
   describe('error method', () => {
     it('should format error message as JSON', () => {
@@ -39,10 +38,10 @@ describe('JsonLogger Tests', () => {
       loggerInstance.error(testError);
 
       expect(errorSpy).toHaveBeenCalledWith(
-            expect.stringMatching(
-                /^{"level":"error","message":"error message","optionalParams":\[\[\]\],"timestamp":".*"}$/,
-              ),
-            )
+        expect.stringMatching(
+          /^{"level":"error","message":"error message","optionalParams":\[\[\]\],"timestamp":".*"}$/,
+        ),
+      );
+    });
   });
-        });
-      });
+});

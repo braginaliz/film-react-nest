@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {Film} from '../entity/efilm';
+import { Film } from '../entity/efilm';
 import { Schedule } from 'src/entity/eschedule';
 import { TypeOrmFilmsRepository } from 'src/repository/films.repository';
-
 
 @Module({
   imports: [
