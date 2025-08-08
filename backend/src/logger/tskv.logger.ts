@@ -2,14 +2,9 @@ import { LoggerService, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TskvLogger implements LoggerService {
-  private formatMessage(level: string, message: any, ...optionalParams: any[]) {
-    const time = new Date().toISOString();
-    const formattedParams = optionalParams
-      .map((param, index) => `param${index}=${param}`)
-      .join('\t');
-
-    return `time=${time}\tlevel=${level}\tmessage=${message}${formattedParams ? '\t' + formattedParams : ''}\n`;
-  }
+    formatMessage(level: string, message: any, ...optionalParams: any[]) {
+        return `level=${level}\tmessage=${message}\toptionalParams=${optionalParams}\n`;
+      }
 
   log(message: any, ...optionalParams: any[]) {
     process.stdout.write(this.formatMessage('log', message, ...optionalParams));
@@ -18,6 +13,10 @@ export class TskvLogger implements LoggerService {
   error(message: any, ...optionalParams: any[]) {
     process.stderr.write(this.formatMessage('error', message, ...optionalParams));
   }
+
+  fatal(message: any, ...optionalParams: any[]) {
+    console.log(this.formatMessage('fatal', message, optionalParams));
+}
 
   warn(message: any, ...optionalParams: any[]) {
     process.stdout.write(this.formatMessage('warn', message, ...optionalParams));
