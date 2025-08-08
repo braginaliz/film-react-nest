@@ -4,72 +4,72 @@ import { FilmsService } from './films.service';
 import { FilmsResponseDto, ScheduleResponseDto } from './dto/films.dto';
 
 describe('FilmsController', () => {
-  let filmsController: FilmsController;
-  let filmsService: FilmsService;
+  let controller: FilmsController;
+  let service: FilmsService;
 
-  const filmsServiceMock = {
+  const mockFilmsService = {
     getFilms: jest.fn(),
     fetchFilmSchedule: jest.fn(),
   };
 
   beforeEach(async () => {
-    const testingModule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [FilmsController],
       providers: [
         {
           provide: FilmsService,
-          useValue: filmsServiceMock,
+          useValue: mockFilmsService,
         },
       ],
     }).compile();
 
-    filmsController = testingModule.get<FilmsController>(FilmsController);
-    filmsService = testingModule.get<FilmsService>(FilmsService);
+    controller = module.get<FilmsController>(FilmsController);
+    service = module.get<FilmsService>(FilmsService);
   });
 
-  describe('fetchFilms', () => {
-    it('должен вернуть список фильмов', async () => {
-      const filmsList: FilmsResponseDto = {
+  describe('getFilms', () => {
+    it('должен возвращать список фильмов', async () => {
+      const expectedFilms: FilmsResponseDto = {
         total: 2,
         items: [
           {
             id: '1',
-            title: 'Фильм 1',
+            title: 'Film 1',
             rating: 8.5,
-            director: 'Режиссер 1',
-            tags: ['боевик', 'драма'],
-            about: 'О фильме 1',
-            description: 'Описание фильма 1',
+            director: 'Director 1',
+            tags: ['action', 'drama'],
+            about: 'About film 1',
+            description: 'Description of film 1',
             image: 'image1.jpg',
             cover: 'cover1.jpg',
           },
           {
             id: '2',
-            title: 'Фильм 2',
+            title: 'Film 2',
             rating: 7.8,
-            director: 'Режиссер 2',
-            tags: ['комедия'],
-            about: 'О фильме 2',
-            description: 'Описание фильма 2',
+            director: 'Director 2',
+            tags: ['comedy'],
+            about: 'About film 2',
+            description: 'Description of film 2',
             image: 'image2.jpg',
             cover: 'cover2.jpg',
           },
         ],
       };
 
-      filmsServiceMock.getFilms.mockResolvedValue(filmsList);
+      mockFilmsService.getFilms.mockResolvedValue(expectedFilms);
 
-      const response = await filmsController.fetchFilms();
+      const result = await controller.fetchFilms();
 
-      expect(filmsService.fetchFilms).toHaveBeenCalled();
-      expect(response).toEqual(filmsList);
+      expect(service.fetchFilms).toHaveBeenCalled();
+      expect(result).toEqual(expectedFilms);
     });
   });
 
   describe('fetchFilmSchedule', () => {
-    it('должен получить расписание фильма по его ID', async () => {
+    it('должен возвращать расписание фильма по ID', async () => {
       const filmId = '1';
-      const scheduleData: ScheduleResponseDto = {
+      const expectedSchedule: ScheduleResponseDto = {
         total: 1,
         items: [
           {
@@ -84,12 +84,39 @@ describe('FilmsController', () => {
         ],
       };
 
-      filmsServiceMock.fetchFilmSchedule.mockResolvedValue(scheduleData);
+      mockFilmsService.fetchFilmSchedule.mockResolvedValue(expectedSchedule);
 
-      const response = await filmsController.fetchFilmSchedule(filmId);
+      const result = await controller.fetchFilmSchedule(filmId);
 
-      expect(filmsService.fetchFilmSchedule).toHaveBeenCalledWith(filmId);
-      expect(response).toEqual(scheduleData);
+      expect(service.fetchFilmSchedule).toHaveBeenCalledWith(filmId);
+      expect(result).toEqual(expectedSchedule);
+    });
+  });
+
+  describe('getFilmShedule', () => {
+    it('должен возвращать расписание фильма по ID (альтернативный эндпоинт)', async () => {
+      const filmId = '1';
+      const expectedSchedule: ScheduleResponseDto = {
+        total: 1,
+        items: [
+          {
+            id: '1',
+            daytime: '10:00',
+            hall: 1,
+            rows: 10,
+            seats: 100,
+            price: 500,
+            taken: ['A1', 'A2'],
+          },
+        ],
+      };
+
+      mockFilmsService.fetchFilmSchedule.mockResolvedValue(expectedSchedule);
+
+      const result = await controller.fetchFilmSchedule(filmId);
+
+      expect(service.fetchFilmSchedule).toHaveBeenCalledWith(filmId);
+      expect(result).toEqual(expectedSchedule);
     });
   });
 });
