@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   TicketOrderDto,
   TicketOrderResponseDto,
   TicketItemDto,
   ErrorDto,
 } from './dto/order.dto';
-import { FilmsRepository } from '../repository/films.repository';
+import { TypeOrmFilmsRepository } from '../repository/films.repository';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: FilmsRepository) {}
+  constructor(
+    @Inject('IFilmsRepository')
+    private readonly filmsRepository: TypeOrmFilmsRepository,
+  ) {}
 
   async createOrder(
     orders: TicketOrderDto[],
@@ -86,10 +89,6 @@ export class OrderService {
     orderDto: TicketOrderDto,
     processedSeats: Set<string>,
   ): Promise<TicketItemDto | { error: string }> {
-    if (!this.isOrderDataValid(orderDto)) {
-      return { error: 'Не хватает данных для оформления заказа' };
-    }
-
     const row = Number(orderDto.row);
     const seat = Number(orderDto.seat);
 
@@ -102,7 +101,7 @@ export class OrderService {
     const requestSeatKey = `${orderDto.session}:${row}:${seat}`;
     if (processedSeats.has(requestSeatKey)) {
       return {
-        error: `Место ${row}:${seat} уже существуют в этом запросе`,
+        error: `Место ${row}:${seat} уже существует в этом запросе`,
       };
     }
 
@@ -133,12 +132,6 @@ export class OrderService {
     return this.createOrderItem(orderDto, session, row, seat);
   }
 
-  private isOrderDataValid(orderDto: TicketOrderDto): boolean {
-    return Boolean(
-      orderDto.film && orderDto.session && orderDto.row && orderDto.seat,
-    );
-  }
-
   private isRowAndSeatValid(row: number, seat: number): boolean {
     return (
       Number.isInteger(row) && Number.isInteger(seat) && row > 0 && seat > 0
@@ -166,4 +159,3 @@ export class OrderService {
     return `order-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
   }
 }
-

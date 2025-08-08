@@ -1,33 +1,39 @@
 //TODO описать DTO для запросов к /films
-import { IsString, IsNumber, IsArray, IsOptional, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsArray,
+  IsOptional,
+  IsDateString,
+} from 'class-validator';
 
 export class SessionDto {
-    @IsString()
-    id: string;
-    @IsDateString()
-    daytime: string;
-    @IsNumber()
-    hall: number;
-    @IsNumber()
-    rows: number;
-    @IsNumber()
-    seats: number;
+  @IsString()
+  id: string;
+  @IsDateString()
+  daytime: string;
+  @IsNumber()
+  hall: number;
+  @IsNumber()
+  rows: number;
+  @IsNumber()
+  seats: number;
 
-    @IsNumber()
-    price: number;
-  
-    @IsArray() 
-    @IsString({ each: true })
-    taken: string[]; 
-  }
-  
-  export class ScheduleResponseDto {
-    @IsNumber()
-    total: number;
-  
-    @IsArray()
-    items: SessionDto[];
-  }
+  @IsNumber()
+  price: number;
+
+  @IsArray()
+  @IsString({ each: true })
+  taken: string[];
+}
+
+export class ScheduleResponseDto {
+  @IsNumber()
+  total: number;
+
+  @IsArray()
+  items: SessionDto[];
+}
 
 export class CreateFilmDto {
   @IsString()
@@ -39,7 +45,7 @@ export class CreateFilmDto {
   @IsString()
   director: string;
 
-  @IsArray() 
+  @IsArray()
   @IsString({ each: true })
   tags: string[];
 
@@ -50,17 +56,16 @@ export class CreateFilmDto {
   about: string;
 
   @IsString()
-  @IsOptional() 
+  @IsOptional()
   image: string;
 
   @IsString()
-  @IsOptional() 
+  @IsOptional()
   cover: string;
 
   @IsString()
-  @IsOptional() 
+  @IsOptional()
   description: string;
-
 }
 
 export class FilmsResponseDto {

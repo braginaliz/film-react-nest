@@ -1,9 +1,6 @@
 //TODO реализовать DTO для /orders
 
-import { IsString, 
-    IsNumber, 
-    IsOptional, 
-    IsArray } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsArray } from 'class-validator';
 
 export class TicketOrderDto {
   @IsString()
