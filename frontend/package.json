@@ -40,7 +40,7 @@
     "sass": "^1.77.6",
     "storybook": "^8.1.11",
     "typescript": "^5.2.2",
-    "vite": "^6.3.5"
+    "vite": "^7.1.1"
   },
   "packageManager": "pnpm@8.10.2+sha1.e0b68270e89c817ff88b7be62466a2128c53af02"
 }
