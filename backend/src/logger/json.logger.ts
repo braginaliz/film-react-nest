@@ -24,7 +24,7 @@ export class JsonLogger implements LoggerService {
 
   fatal(message: any, ...optionalParams: any[]) {
     console.log(this.formatMessage('fatal', message, optionalParams));
-}
+  }
 
   verbose(message: any, ...optionalParams: any[]) {
     console.log(this.formatMessage('verbose', message, optionalParams));

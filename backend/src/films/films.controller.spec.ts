@@ -8,8 +8,16 @@ describe('FilmsController', () => {
   let filmsService: FilmsService;
 
   const mockFilmsService = {
-    fetchFilms: jest.fn(() => Promise.resolve({ films: [], total: 0, items: [] } as FilmsResponseDto)),
-    fetchFilmSchedule: jest.fn(() => Promise.resolve({ schedule: [], total: 0, items: [] } as ScheduleResponseDto)),
+    fetchFilms: jest.fn(() =>
+      Promise.resolve({ films: [], total: 0, items: [] } as FilmsResponseDto),
+    ),
+    fetchFilmSchedule: jest.fn(() =>
+      Promise.resolve({
+        schedule: [],
+        total: 0,
+        items: [],
+      } as ScheduleResponseDto),
+    ),
   };
 
   beforeEach(async () => {

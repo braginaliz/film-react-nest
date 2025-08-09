@@ -9,7 +9,6 @@ import {
 
 describe('OrderController', () => {
   let orderController: OrderController;
-  let orderService: OrderService;
 
   const mockOrderService = {
     createOrder: jest.fn(),
@@ -27,7 +26,6 @@ describe('OrderController', () => {
     }).compile();
 
     orderController = module.get<OrderController>(OrderController);
-    orderService = module.get<OrderService>(OrderService);
   });
 
   it('should be defined', () => {
