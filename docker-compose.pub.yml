@@ -58,7 +58,7 @@ services:
   server:
     image: 'ghcr.io/braginaliz/server:latest'
     ports:
-      - 80:80
+      - 81:80
     volumes:
       - frontend_build:/var/www
     depends_on:
