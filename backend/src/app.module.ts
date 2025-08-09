@@ -1,4 +1,4 @@
-import { Module} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
@@ -9,7 +9,6 @@ import { FilmsService } from './films/films.service';
 import { OrderService } from './order/order.service';
 import { DatabaseModule } from './database/database.module';
 import { configProvider } from './app.config.provider';
-
 
 @Module({
   imports: [
