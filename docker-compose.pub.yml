@@ -32,8 +32,6 @@ services:
 
   frontend:
     image: 'ghcr.io/braginaliz/frontend:latest'
-    build:
-      context: frontend
     environment:
       VITE_BASE_URL: /
       VITE_API_URL: /api/afisha
@@ -43,8 +41,6 @@ services:
 
   backend:
     image: 'ghcr.io/braginaliz/backend:latest'
-    build:
-        context: backend
     environment:
         PORT: 3000
         DEBUG: '*'
@@ -61,8 +57,6 @@ services:
 
   server:
     image: 'ghcr.io/braginaliz/server:latest'
-    build:
-      context: nginx
     ports:
       - 80:80
     volumes:
