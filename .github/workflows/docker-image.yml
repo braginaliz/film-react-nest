@@ -1,0 +1,51 @@
+name: Docker Image CI
+on:
+    push:
+      branches:
+        - review-3
+    pull_request:
+      branches:
+        - main
+  
+jobs:
+    build:
+      runs-on: ubuntu-latest
+  
+      permissions:
+        contents: write
+        packages: write
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+  
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: Build and push Backend Docker image
+        uses: docker/build-push-action@v6
+        with:
+            context: '{{defaultContext}}:backend'
+            push: true
+            tags: ghcr.io/braginaliz/backend:latest
+  
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v6
+        with:
+            context: '{{defaultContext}}:frontend'
+            push: true
+            tags: ghcr.io/braginaliz/frontend:latest
+
+      - name: Build and push Server Docker image
+        uses: docker/build-push-action@v6
+        with:
+            context: '{{defaultContext}}:nginx'
+            push: true
+            tags: ghcr.io/braginaliz/server:latest
+    
