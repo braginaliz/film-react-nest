@@ -2,7 +2,7 @@ name: Docker Image CI
 on:
     push:
       branches:
-        - review-3
+        - review-2
     pull_request:
       branches:
         - main
