@@ -1,4 +1,4 @@
-\connect postgres
+\connect films
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
