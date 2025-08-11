@@ -37,8 +37,8 @@ services:
     container_name: frontend
     environment:
       VITE_BASE_URL: /
-      VITE_API_URL: /api/afisha
-      VITE_CDN_URL: /content/afisha
+      VITE_API_URL: http://backend:3000/api/afisha
+      VITE_CDN_URL: http://backend:3000/content/afisha
     volumes:
       - frontend_build:/app/dist
 
