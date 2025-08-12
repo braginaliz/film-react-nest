@@ -1,20 +1,21 @@
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
-  useValue: {
+  useFactory: (configService: ConfigService): AppConfig => ({
     database: {
-      driver: process.env.DATABASE_DRIVER || 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
-      username: process.env.DATABASE_USERNAME || 'user',
-      password: process.env.DATABASE_PASSWORD || 'password',
-      database: process.env.DATABASE_NAME || 'database_name',
-      synchronize: true,
-      logging: true,
+      driver: configService.get<string>('DATABASE_DRIVER', 'postgres'),
+      host: configService.get<string>('DATABASE_HOST', 'localhost'),
+      port: configService.get<number>('DATABASE_PORT', 5432),
+      username: configService.get<string>('DATABASE_USERNAME', 'prac'),
+      password: configService.get<string>('DATABASE_PASSWORD', 'prac'),
+      database: configService.get<string>('DATABASE_NAME', 'prac'),
+      synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE', false),
+      logging: configService.get<boolean>('DATABASE_LOGGING', false),
     },
-  } as AppConfig,
+  }),
+  inject: [ConfigService],
 };
 
 export interface AppConfig {
