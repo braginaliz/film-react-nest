@@ -89,7 +89,7 @@ jobs:
             git fetch --all --prune
             git checkout "${DEPLOY_BRANCH:-main}"
             git pull --ff-only
-           
+            # .env берётся напрямую из репозитория (не нужно ручное копирование)
             docker login ghcr.io -u "$GHCR_USER" -p "$GHCR_TOKEN"
             docker compose pull
             docker compose up -d

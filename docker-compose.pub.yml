@@ -62,7 +62,7 @@ services:
   server:
     image: 'ghcr.io/${OWNER}/server:latest'
     ports:
-      - 81:80
+      - 83:80
     volumes:
       - frontend_build:/var/www
     depends_on:
