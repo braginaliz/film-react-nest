@@ -18,8 +18,14 @@ import { TypeOrmFilmsRepository } from 'src/repository/films.repository';
         password: configService.get<string>('DATABASE_PASSWORD', 'prac'),
         database: configService.get<string>('DATABASE_NAME', 'prac'),
         entities: [Film, Schedule],
-        synchronize: true,
-        logging: true,
+        synchronize: (() => {
+          const raw = configService.get<string>('DATABASE_SYNCHRONIZE', 'false');
+          return typeof raw === 'string' ? raw.toLowerCase() === 'true' : Boolean(raw);
+        })(),
+        logging: (() => {
+          const raw = configService.get<string>('DATABASE_LOGGING', 'false');
+          return typeof raw === 'string' ? raw.toLowerCase() === 'true' : Boolean(raw);
+        })(),
       }),
     }),
     TypeOrmModule.forFeature([Film, Schedule]),

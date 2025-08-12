@@ -16,7 +16,7 @@ import { configProvider } from './app.config.provider';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'public', 'content'),
+      rootPath: path.join(__dirname, 'public', 'content'),
       serveRoot: '/content',
     }),
     DatabaseModule,
